@@ -26,20 +26,13 @@
 #
 
 
-import numpy as np
+import math
 
 
 class RandomNumberGenerator:
     def __init__(self):
         self.random_variates = []
         self.random_numbers = []
-
-    # Save the array of rnadom numbers into a text file for viewing.
-    def write_to_file(self):
-        with open("random_numbers.txt", 'w') as file:
-            for i in self.random_numbers:
-                file.write(str(i) + '\n')
-            file.close()
 
     # Generate random numbers using the linear congruential method.
     def linear_congruential(self, 
@@ -48,16 +41,21 @@ class RandomNumberGenerator:
                             increment=0,    # c
                             multiplier=11,  # a
                             modulus=1_024): # m
-        self.random_numbers = []
+        self.random_numbers = [0] * size
         for i in range(size):
-            seed = (multiplier * seed + increment) % modulus
-            self.random_numbers.append(seed)
-        # Write and return random numbers.
-        self.write_to_file()
+            seed = ((multiplier * seed) + increment) % modulus
+            self.random_numbers[i] = seed / modulus
         return self.random_numbers
 
+
+class RandomVariateGenerator:
+    def __init__(self):
+        self.random_variates = []
+
     # Generate random variates using the inverse transform technique.
-    def inverse_transform(self, LAMBDA=3):
-        self.random_variates = -1/LAMBDA * np.log(1 - self.random_numbers)
-        self.write_to_file()
+    def inverse_transform(self, LAMBDA=3, random_numbers=[]):
+        self.random_variates = []
+        for random_number in random_numbers:
+            random_variate = (-1 / LAMBDA) * math.log(1 - random_number)
+            self.random_variates.append(random_variate)
         return self.random_variates
