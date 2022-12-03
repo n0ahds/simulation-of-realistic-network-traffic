@@ -11,6 +11,12 @@
 #       generate randomized test traffic similar to what is seen in reality.
 # 
 #   FUNCTIONS :
+#       get_formatted_time()
+#       write_to_file()
+#       mean()
+#       variance()
+#       stdev()
+#       plot_histrogram()
 #       main()
 # 
 #   NOTES :
@@ -23,6 +29,8 @@
 # 
 #   VERSION     DATE        WHO             DETAILS
 #   0.0.1a      2022.12.02  Noah            Creation of project.
+#   0.0.1b      2022.12.03  Noah            First implementation of linear congruential method and inverse transform technique.
+#   0.0.1c      2022.12.03  Noah            Added numpy exponential distribution to compare with exponential inverse transform.
 #
 
 
@@ -57,7 +65,7 @@ def stdev(data):
     return np.std(data)
 
 # Create a histogram with the data provided.
-def histogram(data, title, filename, nbins=30):
+def plot_histogram(data, title, filename, nbins=30):
     plt.clf()
     plt.style.use('ggplot')
     plt.hist(data, nbins, rwidth=0.85, color='cornflowerblue')
@@ -80,9 +88,11 @@ def histogram(data, title, filename, nbins=30):
 
 
 def main():
+    # Instantiate both random generator objects.
     rng = RandomNumberGenerator()
     rvg = RandomVariateGenerator()
 
+    # Generating and graphing sample of 1,024 random numbers.
     timestamp = get_formatted_time()
     random_numbers = rng.linear_congruential(
         size=1_024,
@@ -91,13 +101,14 @@ def main():
         multiplier=11,
         modulus=1_024
     )
-    histogram(
+    plot_histogram(
         data=random_numbers, 
         title="Linear Congruential Random Number Generation", 
         filename=f"{timestamp}"
     )
     write_to_file(f"{timestamp}", random_numbers)
 
+    # Generating and graphing sample of 102,400 random numbers.
     timestamp = get_formatted_time()
     random_numbers = rng.linear_congruential(
         size=102_400,
@@ -106,13 +117,14 @@ def main():
         multiplier=11,
         modulus=1_024
     )
-    histogram(
+    plot_histogram(
         data=random_numbers, 
         title="Linear Congruential Random Number Generation", 
         filename=f"{timestamp}"
     )
     write_to_file(f"{timestamp}", random_numbers)
 
+    # Generating and graphing sample of 1,240 random numbers.
     timestamp = get_formatted_time()
     random_numbers = rng.linear_congruential(
         size=1_024,
@@ -121,13 +133,14 @@ def main():
         multiplier=25_214_903_917,
         modulus=2**48
     )
-    histogram(
+    plot_histogram(
         data=random_numbers, 
         title="Linear Congruential Random Number Generation", 
         filename=f"{timestamp}"
     )
     write_to_file(f"{timestamp}", random_numbers)
 
+    # Generating and graphing sample of 102,400 random numbers.
     timestamp = get_formatted_time()
     random_numbers = rng.linear_congruential(
         size=102_400,
@@ -136,25 +149,38 @@ def main():
         multiplier=25_214_903_917,
         modulus=2**48
     )
-    histogram(
+    plot_histogram(
         data=random_numbers, 
         title="Linear Congruential Random Number Generation", 
         filename=f"{timestamp}"
     )
     write_to_file(f"{timestamp}", random_numbers)
 
+    # Generating and graphing random variate numbers following an exponential distribution
+    # derived from our random number generator following a uniform distribution.
     timestamp = get_formatted_time()
-    random_variates = rvg.inverse_transform(
+    random_variates = rvg.inverse_transform_exponential(
         LAMBDA=3,
         random_numbers=random_numbers
     )
-    histogram(
+    plot_histogram(
         data=random_variates, 
         title="Inverse Transform Rand Variates (Exponential Distribution)", 
         filename=f"{timestamp}"
     )
     write_to_file(f"{timestamp}", random_numbers)
 
+    # Generating and graphing sample of 102,400 random numbers using the exponential
+    # function provided by numpy.
+    timestamp = get_formatted_time()
+    np.random.seed(5)
+    random_numbers = np.random.exponential(scale=1/3, size=102_400)
+    plot_histogram(
+        data=random_numbers, 
+        title="Exponential Distribution Using Numpy's Library", 
+        filename=f"{timestamp}"
+    )
+    write_to_file(f"{timestamp}", random_numbers)
 
 
 # Runs the code.

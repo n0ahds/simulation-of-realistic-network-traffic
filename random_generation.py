@@ -11,7 +11,10 @@
 #       generate randomized test traffic similar to what is seen in reality.
 # 
 #   FUNCTIONS :
-#       ...
+#       RandomNumberGenerator()
+#       RandomNumberGenerator.linear_congruential()
+#       RandomVariateGenerator()
+#       RandomVariateGenerator.inverse_transform_exponential()
 # 
 #   NOTES :
 #       - ...
@@ -23,6 +26,8 @@
 # 
 #   VERSION     DATE        WHO             DETAILS
 #   0.0.1a      2022.12.02  Noah            Creation of project.
+#   0.0.1b      2022.12.03  Noah            First implementation of linear congruential method and inverse transform technique.
+#   0.0.1c      2022.12.03  Noah            Added numpy exponential distribution to compare with exponential inverse transform.
 #
 
 
@@ -53,7 +58,7 @@ class RandomVariateGenerator:
         self.random_variates = []
 
     # Generate random variates using the inverse transform technique.
-    def inverse_transform(self, LAMBDA=3, random_numbers=[]):
+    def inverse_transform_exponential(self, LAMBDA=3, random_numbers=[]):
         self.random_variates = []
         for random_number in random_numbers:
             random_variate = (-1 / LAMBDA) * math.log(1 - random_number)
