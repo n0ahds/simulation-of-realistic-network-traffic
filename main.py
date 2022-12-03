@@ -26,6 +26,8 @@
 #
 
 
+from random_number_generator import RandomNumberGenerator
+
 from numpy import random as r
 import numpy as np
 import matplotlib.pyplot as plt
@@ -37,9 +39,9 @@ def histogram(data, data_label, nbins=30):
     plt.style.use('ggplot')
     plt.hist(data, nbins, rwidth=0.85, color='cornflowerblue')
     plt.title(data_label)
-    plt.xlabel('Generated Random Numbers')
+    plt.xlabel('Linear Congruential Random Number Generation')
     plt.ylabel('Occurence')
-    plt.savefig('histograms/' + data_label + '.svg')
+    plt.savefig(data_label + '.svg')
 
 
 def mean(data):
@@ -58,7 +60,15 @@ def stdev(data):
 
 
 def main():
-    pass
+    rng = RandomNumberGenerator()
+    random_numbers = rng.linear_congruential(
+        size=102_400,
+        seed=7,
+        increment=0,
+        multiplier=25_214_903_917,
+        modulus=2**48
+    )
+    histogram(data=random_numbers, data_label="Random Numbers")
 
 
 # Runs the code.
